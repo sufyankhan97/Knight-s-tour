@@ -73,7 +73,7 @@ module cmd_proc(clk,rst_n,cmd,cmd_rdy,clr_cmd_rdy,send_resp,strt_cal,
 	assign frwrd_zero = !(|frwrd);			// dec_frwrd used to set enable when frwd is not 0
 	assign max_spd = &frwrd[9:8]; 	
 
-	assign en = heading_rdy ? (frwrd_zero && inc_frwrd) || (max_spd && dec_frwrd) : 1'b0;
+	assign en = heading_rdy ? !((frwrd_zero && dec_frwrd) || (max_spd && inc_frwrd)) : 1'b0;
 	
 	////////////////////posedge detector for IR//////////////////////
 	always @(posedge clk)		
@@ -99,7 +99,7 @@ module cmd_proc(clk,rst_n,cmd,cmd_rdy,clr_cmd_rdy,send_resp,strt_cal,
 	end
 	//////////////////////////////////////////
 
-	assign move_done = (move_counter == move_count_cmd);	
+	assign move_done = (move_counter == move_count_cmd) && (move_count_cmd != 4'h0);	
 
 	/////////////////////////////////////PID Interface/////////////////////////////////////////
 
@@ -127,10 +127,9 @@ module cmd_proc(clk,rst_n,cmd,cmd_rdy,clr_cmd_rdy,send_resp,strt_cal,
 	
 	// setting fanfare
 	reg fanfare_set;
-	always @(posedge clk, posedge cmd_rdy) 	begin	// flip flop needed to set fanfare as cmd gets cleared 
+	always @(posedge clk) 	// flip flop needed to set fanfare as cmd gets cleared 
 		if(cmd_rdy)
 			fanfare_set <= opcode==4'h3 ? 1'b1 : 1'b0 ;	//set fanfare based on command
-	end
 	
 	/////////////////////////////////////////////////////////////////////
 	//////////////////////// state machine //////////////////////////////
@@ -151,27 +150,28 @@ module cmd_proc(clk,rst_n,cmd,cmd_rdy,clr_cmd_rdy,send_resp,strt_cal,
 		move_cmd = 0;			// signal to start bot orienting itself. Reset square count, and desired_heading
 		inc_frwrd = 0;			// begins ramping up speed of bot to max speed
 		dec_frwrd = 0;			// begins decelerating bot.
-		clr_frwd = 0;			// sets bot speed to 0
+		clr_frwd = 1'b1;			// sets bot speed to 0
 		tour_go_comb = 0;		// sets tour_go
 		fanfare_go = 0;			// sets fanfare_go
 		nxt_state = state;
 		
 		case (state)
 		IDLE:	begin 
-				if (cmd_rdy)
-					clr_cmd_rdy = 1'b1;
-				if (opcode == 4'h0)
-					nxt_state = CAL;
-				else if (opcode == 4'h2)
-					nxt_state = MOVE;
-				else if (opcode == 4'h3)
-					nxt_state = MOVE;
-				else if (opcode == 4'h4)
-					nxt_state = TOUR;
+				if (cmd_rdy) begin
+					if (opcode == 4'h0)
+						nxt_state = CAL;
+					else if (opcode == 4'h2)
+						nxt_state = STR_MOVE;
+					else if (opcode == 4'h3)
+						nxt_state = STR_MOVE;
+					else if (opcode == 4'h4)
+						nxt_state = TOUR;
+					end
 				end
 				
 		CAL:	begin 					
 				strt_cal = 1'b1;		// begin calibration
+				clr_cmd_rdy = 1'b1;
 				if (cal_done)	begin	// after cal is over, got back to IDLE
 					send_resp = 1'b1;
 					nxt_state = IDLE;	
@@ -179,11 +179,14 @@ module cmd_proc(clk,rst_n,cmd,cmd_rdy,clr_cmd_rdy,send_resp,strt_cal,
 					end
 				end
 		
-		STR_MOVE:	if ((error < 12'h030) && (error > 12'hFD0))	begin 	// make sure heading is more or less correct
+		STR_MOVE:	begin 
+					clr_cmd_rdy = 1'b1;
+					if ((error < $signed(12'h030)) && (error > $signed(12'hFD0))) 	// make sure heading is more or less correct
 						nxt_state = MOVE;								// start moving forward
-						clr_frwd = 1'b1;	end							// set initial bot speed to 0
+					end
 					
 		MOVE:	begin
+				clr_frwd = 1'b0;
 				inc_frwrd = 1'b1;
 				if (move_done) begin			
 					nxt_state = STP_MOVE;			// begin bot deceleration after squares are covered
@@ -191,6 +194,7 @@ module cmd_proc(clk,rst_n,cmd,cmd_rdy,clr_cmd_rdy,send_resp,strt_cal,
 				end
 				
 		STP_MOVE: 	begin
+					clr_frwd = 1'b0;
 					dec_frwrd = 1'b1;
 					if (!(|frwrd)) begin	// check if bot is stationary
 						send_resp = 1'b1;	// send response
@@ -198,6 +202,7 @@ module cmd_proc(clk,rst_n,cmd,cmd_rdy,clr_cmd_rdy,send_resp,strt_cal,
 					end
 		
 		TOUR:	begin 						// commands received from TourCmd
+				clr_cmd_rdy = 1'b1;
 				tour_go_comb = 1'b1;
 				nxt_state = IDLE; 
 				end
