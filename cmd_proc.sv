@@ -73,6 +73,8 @@ module cmd_proc(clk,rst_n,cmd,cmd_rdy,clr_cmd_rdy,send_resp,strt_cal,
 	assign frwrd_zero = !(|frwrd);			// dec_frwrd used to set enable when frwd is not 0
 	assign max_spd = &frwrd[9:8]; 	
 
+	assign moving = frwrd_zero ? 1'b0 : 1'b1;	// set moving to 1 when bot is in motion
+	
 	assign en = heading_rdy ? !((frwrd_zero && dec_frwrd) || (max_spd && inc_frwrd)) : 1'b0;
 	
 	////////////////////posedge detector for IR//////////////////////
@@ -175,7 +177,7 @@ module cmd_proc(clk,rst_n,cmd,cmd_rdy,clr_cmd_rdy,send_resp,strt_cal,
 				if (cal_done)	begin	// after cal is over, got back to IDLE
 					send_resp = 1'b1;
 					nxt_state = IDLE;	
-					move_cmd = 1'b1;	// bot begins orienting itself
+					
 					end
 				end
 		
@@ -183,6 +185,7 @@ module cmd_proc(clk,rst_n,cmd,cmd_rdy,clr_cmd_rdy,send_resp,strt_cal,
 					clr_cmd_rdy = 1'b1;
 					if ((error < $signed(12'h030)) && (error > $signed(12'hFD0))) 	// make sure heading is more or less correct
 						nxt_state = MOVE;								// start moving forward
+						move_cmd = 1'b1;								// bot begins orienting itself
 					end
 					
 		MOVE:	begin
