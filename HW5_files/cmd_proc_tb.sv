@@ -68,7 +68,7 @@ module cmd_proc_tb();
 		///////////////////////////////////////////////////////////////////////////////////
 		
 		wait4sig (cal_done, 1000000);		// wait for cal_done to be set
-		wait4sig (resp_rdy, 1000000);		// wait for cal_done to be set
+		wait4sig (resp_rdy, 1000000);		// wait for resp_rdy to be set
 		
 		repeat(5)@(posedge clk);	// delay
 		
@@ -86,12 +86,12 @@ module cmd_proc_tb();
 		wait4sig(cmd_sent, 100000); // wait until transimission is complete
 		
 		repeat(10)@(posedge heading_rdy);	// delay
-		if (frwrd !==10'h120) begin
+		if (frwrd !==10'h120) begin			// check if bot speed ramps up
 			$display("You messed up");
 			$stop;	end
 		
 		repeat(20)@(posedge heading_rdy);	// delay
-		if (frwrd !==10'h300) begin
+		if (frwrd !==10'h300) begin			// check if bot speed saturates
 			$display("You messed up");
 			$stop;	end
 		
@@ -101,7 +101,7 @@ module cmd_proc_tb();
 		@(negedge clk);
 		cntrIR = 1'b0;
 		
-		repeat(10)@(posedge heading_rdy);
+		repeat(10)@(posedge heading_rdy);	// check if bot speed does not change with 1 IR pulse
 		if (frwrd !==10'h300) begin
 			$display("You messed up");
 			$stop;	end
@@ -111,28 +111,32 @@ module cmd_proc_tb();
 		
 		@(negedge clk);
 		cntrIR = 1'b0;
-		wait4sig (resp_rdy, 1000000);		// wait for cal_done to be set
-
+		
+		wait4sig (resp_rdy, 1000000);		// check if bot speed ramps down and response is sent
+		if (frwrd !==10'h000) begin
+			$display("You messed up");
+			$stop;	end
+			
 		///////////////////////////////////////////////////////////////////////////////////
 		////////////////////////////// check for sequence 4 ///////////////////////////////		
 		///////////////////////////////////////////////////////////////////////////////////
 		
-		cmd = 16'h2001;
+		cmd = 16'h2001;						// move bot north 1 step again
 		send_cmd = 1;
 
 		@(posedge clk);
-		@(negedge clk); 			// delay
-		send_cmd = 0; 				// de-assert transmitting
+		@(negedge clk); 					// delay
+		send_cmd = 0; 						// de-assert transmitting
 
-		wait4sig(cmd_sent, 100000); // wait until transimission is complete
+		wait4sig(cmd_sent, 100000); 		// wait until transimission is complete
 		
-		repeat(30)@(posedge heading_rdy);	// delay
+		repeat(30)@(posedge heading_rdy);	// check if bot speed is maximum
 		if (frwrd !==10'h300) begin
 			$display("You messed up");
 			$stop;	end
 		
 		rghtIR = 1'b1;
-		repeat(100)@(posedge clk)
+		repeat(100)@(posedge clk)			// look at error at when right IR is high
 		
 		
 	    repeat (5) @(posedge clk);
