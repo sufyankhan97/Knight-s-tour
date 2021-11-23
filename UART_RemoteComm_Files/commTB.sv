@@ -51,9 +51,9 @@ module commTB();
 			$display("You messed up");
 			$stop;	end
 		
-		repeat(5)@(posedge clk);
+		//repeat(5)@(posedge clk);
 		clr_cmd_rdy = 1;			// clear ready after data has been read
-		repeat(5)@(posedge clk); 	// delay
+		repeat(1)@(posedge clk); 	// delay
 		clr_cmd_rdy = 0; 			// de-assert RX clear
 		
 		wait4sig(cmd_sent, 100000); // wait until transimission is complete
