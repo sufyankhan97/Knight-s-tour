@@ -15,5 +15,6 @@ Deadlines to note for project submission are:
 1. .zip file of design due by midnight **10/12** (not sure if this is still valid)
 2. Project demo from **10/12** to **16/10** - we should target the **10/12** (3% extra credit) and definitely be done before **15/12** (last date before 
 penalty) 
+
 More info on the project deadlines and specification are available [here](https://github.com/sufyankhan97/Knight-s-tour/blob/main/ProjectSpec.pdf).
               
