@@ -43,7 +43,7 @@ begin
 //defaulting outputs of SM
 next_state = state;
 cmd_rdy_set = 0;
-cmd = 8'hXX;  // possible cause for error
+//cmd = 8'hXX;  // possible cause for error
 usurp = 0;
 mv_indx_nudge = 0;
 mv_indx_rst = 0;
