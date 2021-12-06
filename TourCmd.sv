@@ -14,13 +14,13 @@ module TourCmd(clk,rst_n,start_tour,move,mv_indx,
   input send_resp;			// lets us know cmd_proc is done with command
   output [7:0] resp;		// either 0xA5 (done) or 0x5A (in progress)
 
+  logic cmd_rdy_set; //to assert final cmd_rdy
   logic usurp; // select signal to choose b/w UART wrapper & TourCmd SM
-  logic [7:0] vertical, horizontal;
-  logic [15:0] cmd_out;
-  logic mv_indx_nudge;
-  logic mv_indx_rst;
-  logic vert_mov;
-  logic [3:0] vert_num, horz_num;
+  logic [7:0] vertical, horizontal;  //horizontal and vertical heading 
+  logic mv_indx_nudge; //to start move index count
+  logic mv_indx_rst; //to reset move index value
+  logic vert_mov; //indicates whether the move was vertical or hortizontal
+  logic [3:0] vert_num, horz_num; //number of squares to move   
   
 // move index counter
 always_ff @(posedge clk, negedge rst_n)
@@ -40,9 +40,9 @@ state_t state, next_state;
 
 always_comb
 begin
-
+//defaulting outputs of SM
 next_state = state;
-cmd_rdy = 0;
+cmd_rdy_set = 0;
 cmd = 8'hXX;  // possible cause for error
 usurp = 0;
 mv_indx_nudge = 0;
@@ -52,17 +52,17 @@ vert_mov = 0;
 case(state)
 
 IDLE : 
-	if (start_tour)
+	if (start_tour) //asserted by TourLogic 
 	begin
-		next_state = VERT;
-		mv_indx_rst = 1;
+		next_state = VERT; //first vertical move
+		mv_indx_rst = 1; //reset index to start counting
 	end
 
 VERT : 
 begin
-	cmd_rdy = 1;
-	usurp = 1;
-	vert_mov = 1;
+	cmd_rdy_set = 1; //indicates cmd is ready for cmd proc
+	usurp = 1; //control usurped by SM
+	vert_mov = 1; //indicates the move made is vertical
 	if (clr_cmd_rdy)
 	begin
 		next_state = VERT_MOVE;
@@ -73,7 +73,7 @@ VERT_MOVE :
 begin 
 	usurp = 1;
 	vert_mov = 1;
-	if (send_resp)
+	if (send_resp) //if cmd_proc is done processing latest command, goes to next state
 	begin
 		next_state = HORI;
 	end
@@ -82,7 +82,7 @@ end
 HORI :
 begin
 	usurp = 1;
-	cmd_rdy = 1;
+	cmd_rdy_set = 1;
 	if (clr_cmd_rdy)
 	begin
 		next_state = HORI_MOVE;
@@ -95,12 +95,12 @@ begin
 	usurp = 1;
 	if (send_resp)
 	begin
-		if (mv_indx == 23)
+		if (mv_indx == 23) //final move
 			next_state = IDLE;
 		else
 		begin
 		next_state = VERT;
-		mv_indx_nudge = 1;
+		mv_indx_nudge = 1; //increase the move index and read cmds until the 23rd move
 		end
 	end
 end
@@ -110,31 +110,32 @@ end
 
 
 // move decompose
+//calculating horizontal and vertical heading and the 
+//number of horizontal and vertical squares to move
+	//refer page no 3 and 12 from Ex23_KnightsTour pdf for the values
 always_comb
 begin
-
-case(move)
-
+case(move) //encoded move to perform
 8'h0 : 
 begin
-        vert_num = 4'h2;
-	vertical = 8'h00;
-        horz_num = 4'h1;
-	horizontal = 8'h3F;
+        vert_num = 4'h2; //move two squares vertically
+	vertical = 8'h00; //move north (+Y)
+        horz_num = 4'h1; //move one square horizontally 
+	horizontal = 8'h3F; //move west (-X)
 end
 
 8'h1 : 
 begin
-	vert_num = 4'h2;
-	vertical = 8'h00;
-	horz_num = 4'h1;
-	horizontal = 8'hBF;
+	vert_num = 4'h2; //move two squares vertically
+	vertical = 8'h00; //move north (+Y)
+	horz_num = 4'h1; //move one square horizontally 
+	horizontal = 8'hBF; //move east (+X)
 	
 end
 
 8'h2 : 
 begin
-	vert_num = 4'h1;
+	vert_num = 4'h1; 
 	vertical = 8'h00;
 	horz_num = 4'h2;
 	horizontal = 8'h3F;
@@ -143,7 +144,7 @@ end
 8'h3 : 
 begin
 	vert_num = 4'h1;
-	vertical = 8'h7F;
+	vertical = 8'h7F; //move south (-Y)
 	horz_num = 4'h2;
 	horizontal = 8'h3F;
 end
@@ -184,13 +185,15 @@ endcase
 
 end
 
-// MUX to select b/w UART and TourCmd SM
-assign cmd_out = (usurp&vert_mov)? {4'h2,vertical,vert_num} :
-                 (usurp) ?  {4'h3,horizontal,horz_num} : cmd_UART;   
-assign cmd_rdy_out = usurp ? cmd_rdy : cmd_rdy_UART;
+// MUX to select b/w UART and TourCmd SM depending on whether control is usurped by TourCmd SM
+	//command = Vertical(2)/horizontal(3) (without/with charge) selection + heading + no of squares to move
+assign cmd = (usurp & vert_mov)? {4'h2,vertical,vert_num} :
+	(usurp) ?  {4'h3,horizontal,horz_num} : cmd_UART;  
+assign cmd_rdy = usurp ? cmd_rdy_set : cmd_rdy_UART;
 
-// MUX to select response 
+// MUX to set response 
+	//If cmd was from UART_wrapper, or was last command of the tour then response is 8’hA5, 
+	//otherwise 8’h5A, if intermediate move of the tour
 assign resp = (usurp & (mv_indx == 5'd23)) ? 8'hA5 : 8'h5A ;
-
- 
+	
 endmodule
