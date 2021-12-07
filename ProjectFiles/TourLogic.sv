@@ -98,13 +98,13 @@ module TourLogic(clk,rst_n,x_start,y_start,go,done,indx,move);
 	function signed [2:0] off_x(input [7:0] try);
 		//function that returns a the x-offset the Knight will move given the encoding of 
 		// the move you are going to try. 
-		assign  off_x = try[0] || try[4] ? -1 : try[2] || try[3] ? -2 : try[1] || try[5] ? 1 : try[6] || try[7] ? 2 : 0;
+		  off_x = try[0] || try[4] ? -1 : try[2] || try[3] ? -2 : try[1] || try[5] ? 1 : try[6] || try[7] ? 2 : 0;
 	endfunction
 
 	function signed [2:0] off_y(input [7:0] try);
 		//function that returns a the y-offset the Knight will move given the encoding of 
 		// the move you are going to try.
-		assign  off_y = try[0] || try[1] ? 2 : try[2] || try[7] ? 1 : try[3] || try[6] ? -1 : try[4] || try[5] ? -2 : 0;
+		  off_y = try[0] || try[1] ? 2 : try[2] || try[7] ? 1 : try[3] || try[6] ? -1 : try[4] || try[5] ? -2 : 0;
 	endfunction
 
 	////////////////////////////////////////////////////////////////////////////////////
