@@ -1,0 +1,30 @@
+ 
+****************************************
+Report : area
+Design : KnightsTour
+Version: S-2021.06
+Date   : Wed Dec  8 17:45:32 2021
+****************************************
+
+Library(s) Used:
+
+    saed32lvt_tt0p85v25c (File: /cae/apps/data/saed32_edk-2018/lib/stdcell_lvt/db_nldm/saed32lvt_tt0p85v25c.db)
+
+Number of ports:                           19
+Number of nets:                          4442
+Number of cells:                         3713
+Number of combinational cells:           2781
+Number of sequential cells:               910
+Number of macros/black boxes:               0
+Number of buf/inv:                        419
+Number of references:                      53
+
+Combinational area:               7089.601033
+Buf/Inv area:                      608.420748
+Noncombinational area:            6395.025588
+Macro/Black Box area:                0.000000
+Net Interconnect area:            3350.034775
+
+Total cell area:                 13484.626621
+Total area:                      16834.661396
+1

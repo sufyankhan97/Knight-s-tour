@@ -1,0 +1,98 @@
+Information: Updating design information... (UID-85)
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : KnightsTour
+Version: S-2021.06
+Date   : Wed Dec  8 16:36:00 2021
+****************************************
+
+Operating Conditions: tt0p85v25c   Library: saed32lvt_tt0p85v25c
+Wire Load Model Mode: enclosed
+
+  Startpoint: iNEMO/iINT/yaw_int_reg[16]
+              (rising edge-triggered flip-flop clocked by “clk”)
+  Endpoint: iCNTRL/D_term_piped_reg[10]
+            (rising edge-triggered flip-flop clocked by “clk”)
+  Path Group: “clk”
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  KnightsTour        16000                 saed32lvt_tt0p85v25c
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock “clk” (rise edge)                             0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  iNEMO/iINT/yaw_int_reg[16]/CLK (DFFARX1_LVT)            0.00       0.00 r
+  iNEMO/iINT/yaw_int_reg[16]/Q (DFFARX1_LVT)              0.11       0.11 f
+  U2643/Y (AO22X1_LVT)                                    0.07       0.17 f
+  iCMD/sub_1_root_sub_0_root_add_125/U2_2/CO (FADDX1_LVT)
+                                                          0.07       0.24 f
+  iCMD/sub_1_root_sub_0_root_add_125/U2_3/CO (FADDX1_LVT)
+                                                          0.08       0.32 f
+  U2902/Y (NAND2X0_LVT)                                   0.05       0.37 r
+  U2916/Y (NAND3X0_LVT)                                   0.04       0.41 f
+  U2912/Y (NAND2X0_LVT)                                   0.05       0.46 r
+  U2910/Y (NAND3X0_LVT)                                   0.04       0.51 f
+  U2898/Y (NBUFFX2_LVT)                                   0.05       0.55 f
+  U2897/Y (XOR3X2_LVT)                                    0.07       0.62 r
+  iCMD/add_0_root_sub_0_root_add_125/U1_6/CO (FADDX1_LVT)
+                                                          0.09       0.71 r
+  iCMD/add_0_root_sub_0_root_add_125/U1_7/CO (FADDX1_LVT)
+                                                          0.09       0.80 r
+  U2764/Y (OR2X1_LVT)                                     0.05       0.85 r
+  U2940/Y (AO221X1_LVT)                                   0.07       0.92 r
+  U2939/Y (AO221X1_LVT)                                   0.07       0.98 r
+  U2759/Y (AO22X1_LVT)                                    0.05       1.03 r
+  U2930/Y (XOR3X2_LVT)                                    0.05       1.08 r
+  U2923/Y (AO21X1_LVT)                                    0.05       1.13 r
+  U2636/Y (AO21X1_LVT)                                    0.05       1.18 r
+  U2921/Y (OR2X2_LVT)                                     0.05       1.23 r
+  U2925/Y (NAND2X0_LVT)                                   0.03       1.26 f
+  U2966/Y (NAND3X0_LVT)                                   0.05       1.31 r
+  U2522/Y (AO22X1_LVT)                                    0.06       1.37 r
+  iCNTRL/sub_79/U2_3/CO (FADDX1_LVT)                      0.08       1.45 r
+  U2960/Y (NAND2X0_LVT)                                   0.03       1.48 f
+  U2956/Y (NAND3X0_LVT)                                   0.04       1.53 r
+  iCNTRL/sub_79/U2_5/CO (FADDX1_LVT)                      0.08       1.61 r
+  iCNTRL/sub_79/U2_6/CO (FADDX1_LVT)                      0.08       1.69 r
+  iCNTRL/sub_79/U2_7/CO (FADDX1_LVT)                      0.09       1.78 r
+  U2632/Y (OR2X1_LVT)                                     0.05       1.82 r
+  U2631/Y (AO22X1_LVT)                                    0.05       1.87 r
+  U2953/Y (XOR3X2_LVT)                                    0.06       1.93 f
+  U2951/Y (NOR2X2_LVT)                                    0.07       2.00 r
+  U2626/Y (AO21X1_LVT)                                    0.05       2.05 r
+  U2625/Y (AND2X1_LVT)                                    0.04       2.09 r
+  U2587/Y (AND2X1_LVT)                                    0.04       2.14 r
+  iCNTRL/mult_91/S1_2_0/CO (FADDX1_LVT)                   0.08       2.22 r
+  iCNTRL/mult_91/S1_3_0/CO (FADDX1_LVT)                   0.08       2.30 r
+  U2583/Y (OR2X1_LVT)                                     0.05       2.35 r
+  U2582/Y (AO22X1_LVT)                                    0.05       2.39 r
+  iCNTRL/mult_91/S1_5_0/CO (FADDX1_LVT)                   0.09       2.48 r
+  iCNTRL/mult_91/S4_0/S (FADDX1_LVT)                      0.11       2.60 f
+  U2622/Y (AND2X1_LVT)                                    0.05       2.64 f
+  U2975/Y (OAI221X2_LVT)                                  0.09       2.73 r
+  U2974/Y (AND2X1_LVT)                                    0.04       2.77 r
+  U2972/Y (OA21X1_LVT)                                    0.05       2.82 r
+  iCNTRL/D_term_piped_reg[10]/D (DFFARX1_LVT)             0.01       2.83 r
+  data arrival time                                                  2.83
+
+  clock “clk” (rise edge)                             3.00       3.00
+  clock network delay (ideal)                             0.00       3.00
+  clock uncertainty                                      -0.15       2.85
+  iCNTRL/D_term_piped_reg[10]/CLK (DFFARX1_LVT)           0.00       2.85 r
+  library setup time                                     -0.03       2.82
+  data required time                                                 2.82
+  --------------------------------------------------------------------------
+  data required time                                                 2.82
+  data arrival time                                                 -2.83
+  --------------------------------------------------------------------------
+  slack (VIOLATED)                                                  -0.01
+
+
+1
