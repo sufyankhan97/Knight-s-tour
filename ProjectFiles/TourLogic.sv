@@ -21,8 +21,8 @@ module TourLogic(clk,rst_n,x_start,y_start,go,done,indx,move);
 
 	// 2-D array of 5-bit vectors that keep track of where on the board the knight
 	//  has visited.  Will be reduced to 1-bit boolean after debug phase 
-	logic [4:0] board [0:4][0:4];		
-	logic [4:0] board_movenum;					// used within SM to store is move num associated with board location before updating board
+	logic board [0:4][0:4];		
+	logic board_movenum;						// used within SM to store is move num associated with board location before updating board
 	logic [2:0] board_x, board_y;				// indices at with board_movenum value is to be stored
 	
 	// 1-D array (of size 24) to keep track of last move taken from each move index
@@ -98,13 +98,13 @@ module TourLogic(clk,rst_n,x_start,y_start,go,done,indx,move);
 	function signed [2:0] off_x(input [7:0] try);
 		//function that returns a the x-offset the Knight will move given the encoding of 
 		// the move you are going to try. 
-		  off_x = try[0] || try[4] ? -1 : try[2] || try[3] ? -2 : try[1] || try[5] ? 1 : try[6] || try[7] ? 2 : 0;
+		assign  off_x = try[0] || try[4] ? -1 : try[2] || try[3] ? -2 : try[1] || try[5] ? 1 : try[6] || try[7] ? 2 : 0;
 	endfunction
 
 	function signed [2:0] off_y(input [7:0] try);
 		//function that returns a the y-offset the Knight will move given the encoding of 
 		// the move you are going to try.
-		  off_y = try[0] || try[1] ? 2 : try[2] || try[7] ? 1 : try[3] || try[6] ? -1 : try[4] || try[5] ? -2 : 0;
+		assign  off_y = try[0] || try[1] ? 2 : try[2] || try[7] ? 1 : try[3] || try[6] ? -1 : try[4] || try[5] ? -2 : 0;
 	endfunction
 
 	////////////////////////////////////////////////////////////////////////////////////
@@ -223,7 +223,7 @@ module TourLogic(clk,rst_n,x_start,y_start,go,done,indx,move);
 				// save initial position as 1st on board
 				board_x = x_start;
 				board_y = y_start;
-				board_movenum = 5'h1;	
+				board_movenum = 1'b1;	
 				update_loc = 1'b1;			// update location and board data
 				
 				nxt_state = MOVES_CHECK; end
@@ -241,7 +241,7 @@ module TourLogic(clk,rst_n,x_start,y_start,go,done,indx,move);
 				next_yy = yy + off_y(move_try);
 				if (|(poss_moves[move_count] & move_try) && board[next_xx][next_yy] == 0)
 					begin
-					board_movenum = board[xx][yy] + 1;		// increment move num by 1 from previous movenum. Will need to change later
+					board_movenum = 1'b1;					// set 1 to indicate location has been visited
 					board_x = next_xx;
 					board_y = next_yy;
 					update_loc = 1'b1;						// update location and board data
