@@ -16,7 +16,7 @@ module TourCmd(clk,rst_n,start_tour,move,mv_indx,
 
   logic usurp; // select signal to choose b/w UART wrapper & TourCmd SM
   logic [7:0] vertical, horizontal;
-  //logic [15:0] cmd_out;
+  logic cmd_rdy_out;
   logic mv_indx_nudge;
   logic mv_indx_rst;
   logic vert_mov;
@@ -68,7 +68,7 @@ IDLE :
 
 VERT : 
 begin
-	cmd_rdy = 1;
+	cmd_rdy_out = 1;
 	usurp = 1;
 	vert_mov = 1;
 	if (clr_cmd_rdy)
@@ -90,7 +90,7 @@ end
 HORI :
 begin
 	usurp = 1;
-	cmd_rdy = 1;
+	cmd_rdy_out = 1;
 	if (clr_cmd_rdy)
 	begin
 		next_state = HORI_MOVE;
@@ -195,7 +195,7 @@ end
 // MUX to select b/w UART and TourCmd SM
 assign cmd = (usurp&vert_mov)? {4'h2,vertical,vert_num} :
                  (usurp) ?  {4'h3,horizontal,horz_num} : cmd_UART;   
-assign cmd_rdy_out = usurp ? cmd_rdy : cmd_rdy_UART;
+assign cmd_rdy = usurp ? cmd_rdy_out : cmd_rdy_UART;
 
 // MUX to select response 
 assign resp = (usurp & (mv_indx == 5'd23)) ? 8'hA5 : 8'h5A ;
