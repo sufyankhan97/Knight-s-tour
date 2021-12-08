@@ -2,7 +2,6 @@ module cmd_proc(clk,rst_n,cmd,cmd_rdy,clr_cmd_rdy,send_resp,strt_cal,
                 cal_done,heading,heading_rdy,lftIR,cntrIR,rghtIR,error,
 				frwrd,moving,tour_go,fanfare_go);
 				
-	sufyan is great
 	parameter FAST_SIM = 1;				// speeds up incrementing of frwrd register for faster simulation
 				
 	input clk,rst_n;					// 50MHz clock and asynch active low reset
