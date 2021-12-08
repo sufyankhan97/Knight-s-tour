@@ -39,7 +39,9 @@ module UART_rx(clk, rst_n, RX, clr_rdy, rx_data, rdy);
 			
 	// Update bit receive 9 bit shift register
 	always_ff @(posedge clk, negedge rst_n)
-		if (shift)
+		if(!rst_n)
+			rx_shift_reg <= 9'h0;
+		else if (shift)
 			rx_shift_reg <= {RX2, rx_shift_reg[8:1]};	// append data to MSB of reg
 	
 	assign rx_data = rx_shift_reg[7:0];
