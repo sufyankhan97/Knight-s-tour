@@ -50,7 +50,7 @@ always_comb
 begin
 
 next_state = state;
-cmd_rdy = 0;
+cmd_rdy_out = 0;
 //cmd = 8'hXX;  // possible cause for error
 usurp = 0;
 mv_indx_nudge = 0;
