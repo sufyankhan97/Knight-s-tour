@@ -51,7 +51,7 @@ begin
 
 next_state = state;
 cmd_rdy_out = 0;
-//cmd = 8'hXX;  // possible cause for error
+//cmd = 8'hXX;  			// possible cause for error
 usurp = 0;
 mv_indx_nudge = 0;
 mv_indx_rst = 0;
@@ -59,18 +59,18 @@ vert_mov = 0;
 
 case(state)
 
-IDLE : 
-	if (start_tour) //asserted by TourLogic
+IDLE : 				
+	if (start_tour) 		//asserted by TourLogic
 	begin
-		next_state = VERT; //first vertical move
-		mv_indx_rst = 1; //reset index to start counting
+		next_state = VERT; 	//first vertical move
+		mv_indx_rst = 1; 	//reset index to start counting
 	end
 
 VERT : 
 begin
-	cmd_rdy_out = 1; //indicates cmd is ready for cmd proc
-	usurp = 1; //control usurped by SM
-	vert_mov = 1; //indicates the move made is vertical
+	cmd_rdy_out = 1; 		//indicates cmd is ready for cmd proc
+	usurp = 1; 				//control usurped by SM
+	vert_mov = 1; 			//indicates the move made is vertical
 	if (clr_cmd_rdy)
 	begin
 		next_state = VERT_MOVE;
@@ -81,7 +81,7 @@ VERT_MOVE :
 begin 
 	usurp = 1;
 	vert_mov = 1;
-	if (send_resp) //if cmd_proc is done processing latest command, goes to next state
+	if (send_resp) 			//if cmd_proc is done processing latest command, goes to next state
 	begin
 		next_state = HORI;
 	end
@@ -129,9 +129,9 @@ case(move) //encoded move to perform
 8'h1 : 
 begin
         vert_num = 4'h2; //move two squares vertically
-	vertical = 8'h00; //move north (+Y)
+	vertical = 8'h00;	 //move north (+Y)
         horz_num = 4'h1; //move one square horizontally
-	horizontal = 8'h3F; //move west (-X)
+	horizontal = 8'h3F;  //move west (-X)
 end
 
 8'h2 : 
@@ -204,7 +204,6 @@ assign cmd_rdy = usurp ? cmd_rdy_out : cmd_rdy_UART;
 // MUX to set response
 	//If cmd was from UART_wrapper, or was last command of the tour then response is 8’hA5,
 	//otherwise 8’h5A, if intermediate move of the tour
-assign resp = (usurp & (mv_indx == 5'd23)) ? 8'hA5 : 8'h5A ;
-
+assign resp = !usurp ? 8'hA5 : (mv_indx == 5'd23) ? 8'hA5 : 8'h5A;
  
 endmodule
