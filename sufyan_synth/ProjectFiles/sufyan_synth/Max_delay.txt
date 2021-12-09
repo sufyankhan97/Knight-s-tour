@@ -7,17 +7,17 @@ Report : timing
         -max_paths 1
 Design : KnightsTour
 Version: S-2021.06
-Date   : Wed Dec  8 17:45:30 2021
+Date   : Thu Dec  9 11:46:30 2021
 ****************************************
 
 Operating Conditions: tt0p85v25c   Library: saed32lvt_tt0p85v25c
 Wire Load Model Mode: enclosed
 
-  Startpoint: iNEMO/iINT/yaw_int_reg[16]
-              (rising edge-triggered flip-flop clocked by “clk”)
+  Startpoint: iCMD/desired_heading_reg[0]
+              (rising edge-triggered flip-flop clocked by clk)
   Endpoint: iCNTRL/I_term_whole_reg[0]
-            (rising edge-triggered flip-flop clocked by “clk”)
-  Path Group: “clk”
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
   Path Type: max
 
   Des/Clust/Port     Wire Load Model       Library
@@ -26,69 +26,71 @@ Wire Load Model Mode: enclosed
 
   Point                                                   Incr       Path
   --------------------------------------------------------------------------
-  clock “clk” (rise edge)                             0.00       0.00
+  clock clk (rise edge)                                   0.00       0.00
   clock network delay (ideal)                             0.00       0.00
-  iNEMO/iINT/yaw_int_reg[16]/CLK (DFFARX1_LVT)            0.00       0.00 r
-  iNEMO/iINT/yaw_int_reg[16]/Q (DFFARX1_LVT)              0.11       0.11 f
-  iCMD/sub_1_root_sub_0_root_add_125/U2_1/S (FADDX1_LVT)
-                                                          0.15       0.25 r
-  iCMD/add_0_root_sub_0_root_add_125/U1_1/CO (FADDX1_LVT)
-                                                          0.09       0.35 r
-  iCMD/add_0_root_sub_0_root_add_125/U1_2/CO (FADDX1_LVT)
-                                                          0.08       0.43 r
-  iCMD/add_0_root_sub_0_root_add_125/U1_3/CO (FADDX1_LVT)
-                                                          0.08       0.51 r
-  iCMD/add_0_root_sub_0_root_add_125/U1_4/CO (FADDX1_LVT)
-                                                          0.08       0.59 r
-  iCMD/add_0_root_sub_0_root_add_125/U1_5/CO (FADDX1_LVT)
-                                                          0.08       0.67 r
-  iCMD/add_0_root_sub_0_root_add_125/U1_6/CO (FADDX1_LVT)
-                                                          0.08       0.75 r
-  iCMD/add_0_root_sub_0_root_add_125/U1_7/CO (FADDX1_LVT)
-                                                          0.08       0.84 r
-  iCMD/add_0_root_sub_0_root_add_125/U1_8/CO (FADDX1_LVT)
-                                                          0.08       0.92 r
-  iCMD/add_0_root_sub_0_root_add_125/U1_9/CO (FADDX1_LVT)
-                                                          0.08       1.00 r
-  iCMD/add_0_root_sub_0_root_add_125/U1_10/CO (FADDX1_LVT)
-                                                          0.08       1.08 r
-  U3114/Y (XNOR3X2_LVT)                                   0.09       1.17 r
-  U2998/Y (AO21X1_LVT)                                    0.07       1.23 r
-  U2549/Y (AO21X1_LVT)                                    0.08       1.31 r
-  U2548/Y (AND2X1_LVT)                                    0.05       1.36 r
-  iCNTRL/add_44/U1_1/CO (FADDX1_LVT)                      0.08       1.44 r
-  iCNTRL/add_44/U1_2/CO (FADDX1_LVT)                      0.08       1.52 r
-  iCNTRL/add_44/U1_3/CO (FADDX1_LVT)                      0.08       1.60 r
+  iCMD/desired_heading_reg[0]/CLK (DFFX1_LVT)             0.00       0.00 r
+  iCMD/desired_heading_reg[0]/Q (DFFX1_LVT)               0.09       0.09 f
+  U3230/Y (NAND2X0_LVT)                                   0.05       0.13 r
+  iCMD/sub_1_root_sub_0_root_add_125/U2_1/CO (FADDX1_LVT)
+                                                          0.08       0.22 r
+  iCMD/sub_1_root_sub_0_root_add_125/U2_2/CO (FADDX1_LVT)
+                                                          0.08       0.30 r
+  iCMD/sub_1_root_sub_0_root_add_125/U2_3/CO (FADDX1_LVT)
+                                                          0.08       0.38 r
+  iCMD/sub_1_root_sub_0_root_add_125/U2_4/CO (FADDX1_LVT)
+                                                          0.08       0.46 r
+  iCMD/sub_1_root_sub_0_root_add_125/U2_5/CO (FADDX1_LVT)
+                                                          0.08       0.54 r
+  iCMD/sub_1_root_sub_0_root_add_125/U2_6/CO (FADDX1_LVT)
+                                                          0.08       0.63 r
+  iCMD/sub_1_root_sub_0_root_add_125/U2_7/CO (FADDX1_LVT)
+                                                          0.08       0.71 r
+  iCMD/sub_1_root_sub_0_root_add_125/U2_8/CO (FADDX1_LVT)
+                                                          0.08       0.79 r
+  iCMD/sub_1_root_sub_0_root_add_125/U2_9/CO (FADDX1_LVT)
+                                                          0.08       0.87 r
+  iCMD/sub_1_root_sub_0_root_add_125/U2_10/CO (FADDX1_LVT)
+                                                          0.08       0.95 r
+  U3570/Y (XNOR3X1_LVT)                                   0.08       1.03 r
+  iCMD/U14/Y (XOR3X2_LVT)                                 0.11       1.14 f
+  U3700/Y (INVX1_LVT)                                     0.04       1.18 r
+  U3214/Y (AO21X2_LVT)                                    0.06       1.24 r
+  U2531/Y (AO21X1_LVT)                                    0.08       1.31 r
+  U2530/Y (AND2X1_LVT)                                    0.05       1.36 r
+  U2528/Y (OR2X1_LVT)                                     0.04       1.40 r
+  U2527/Y (AO22X1_LVT)                                    0.05       1.45 r
+  iCNTRL/add_44/U1_2/CO (FADDX1_LVT)                      0.08       1.53 r
+  iCNTRL/add_44/U1_3/CO (FADDX1_LVT)                      0.08       1.61 r
   iCNTRL/add_44/U1_4/CO (FADDX1_LVT)                      0.08       1.69 r
-  iCNTRL/add_44/U1_5/CO (FADDX1_LVT)                      0.08       1.77 r
-  iCNTRL/add_44/U1_6/CO (FADDX1_LVT)                      0.08       1.85 r
-  iCNTRL/add_44/U1_7/CO (FADDX1_LVT)                      0.08       1.93 r
-  iCNTRL/add_44/U1_8/CO (FADDX1_LVT)                      0.08       2.01 r
-  iCNTRL/add_44/U1_9/CO (FADDX1_LVT)                      0.08       2.09 r
-  iCNTRL/add_44/U1_10/CO (FADDX1_LVT)                     0.08       2.17 r
-  iCNTRL/add_44/U1_11/CO (FADDX1_LVT)                     0.08       2.26 r
-  iCNTRL/add_44/U1_12/CO (FADDX1_LVT)                     0.08       2.34 r
-  iCNTRL/add_44/U1_13/CO (FADDX1_LVT)                     0.08       2.42 r
-  iCNTRL/add_44/U1_14/Y (XOR3X1_LVT)                      0.07       2.49 f
-  U3293/Y (OR3X1_LVT)                                     0.06       2.55 f
-  U3395/Y (AND3X1_LVT)                                    0.05       2.60 f
-  U3115/Y (AND2X1_LVT)                                    0.07       2.67 f
-  U2512/Y (AO21X1_LVT)                                    0.08       2.75 f
-  U2510/Y (AO22X1_LVT)                                    0.05       2.80 f
-  iCNTRL/I_term_whole_reg[0]/D (DFFARX1_LVT)              0.01       2.81 f
-  data arrival time                                                  2.81
+  iCNTRL/add_44/U1_5/CO (FADDX1_LVT)                      0.08       1.78 r
+  iCNTRL/add_44/U1_6/CO (FADDX1_LVT)                      0.08       1.86 r
+  iCNTRL/add_44/U1_7/CO (FADDX1_LVT)                      0.08       1.94 r
+  iCNTRL/add_44/U1_8/CO (FADDX1_LVT)                      0.08       2.02 r
+  iCNTRL/add_44/U1_9/CO (FADDX1_LVT)                      0.08       2.10 r
+  iCNTRL/add_44/U1_10/CO (FADDX1_LVT)                     0.08       2.18 r
+  iCNTRL/add_44/U1_11/CO (FADDX1_LVT)                     0.08       2.27 r
+  iCNTRL/add_44/U1_12/CO (FADDX1_LVT)                     0.08       2.35 r
+  iCNTRL/add_44/U1_13/CO (FADDX1_LVT)                     0.08       2.43 r
+  iCNTRL/add_44/U1_14/Y (XOR3X2_LVT)                      0.06       2.48 f
+  U3215/Y (XOR2X1_LVT)                                    0.09       2.57 r
+  U2497/Y (NAND2X0_LVT)                                   0.03       2.61 f
+  U3777/Y (AOI21X2_LVT)                                   0.09       2.70 r
+  U2494/Y (AO21X1_LVT)                                    0.06       2.75 r
+  U2492/Y (AO22X1_LVT)                                    0.05       2.81 r
+  iCNTRL/I_term_whole_reg[0]/D (DFFARX1_LVT)              0.01       2.82 r
+  data arrival time                                                  2.82
 
-  clock “clk” (rise edge)                             3.00       3.00
+  clock clk (rise edge)                                   3.00       3.00
   clock network delay (ideal)                             0.00       3.00
   clock uncertainty                                      -0.15       2.85
   iCNTRL/I_term_whole_reg[0]/CLK (DFFARX1_LVT)            0.00       2.85 r
-  library setup time                                     -0.02       2.83
-  data required time                                                 2.83
+  library setup time                                     -0.03       2.82
+  data required time                                                 2.82
   --------------------------------------------------------------------------
-  data required time                                                 2.83
-  data arrival time                                                 -2.81
+  data required time                                                 2.82
+  data arrival time                                                 -2.82
   --------------------------------------------------------------------------
-  slack (MET)                                                        0.02
+  slack (MET)                                                        0.00
 
 
 1
