@@ -51,7 +51,6 @@ begin
 
 next_state = state;
 cmd_rdy_out = 0;
-//cmd = 8'hXX;  			// possible cause for error
 usurp = 0;
 mv_indx_nudge = 0;
 mv_indx_rst = 0;
@@ -189,6 +188,14 @@ begin
 	vertical = 8'h00;
 	horz_num = 4'h2;
 	horizontal = 8'hBF;
+end
+	
+default : // default state to prevent latch in synthesis
+begin
+	vert_num = 4'hX;
+	vertical = 8'hXX;
+	horz_num = 4'hX;
+	horizontal = 8'hXX;
 end
 
 endcase
