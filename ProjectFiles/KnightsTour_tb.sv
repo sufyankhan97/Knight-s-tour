@@ -15,7 +15,7 @@ module KnightsTour_tb();
 	wire SS_n,SCLK,MOSI,MISO,INT;
 	wire lftPWM1,lftPWM2,rghtPWM1,rghtPWM2;
 	wire TX_RX, RX_TX;
-	logic cmd_sent;
+	logic cmd_sent, clr_rx_rdy;
 	logic resp_rdy;
 	logic [7:0] resp;
 	wire IR_en;
@@ -35,7 +35,7 @@ module KnightsTour_tb();
 	// Instantiate RemoteComm to send commands to DUT //
 	///////////////////////////////////////////////////
 	RemoteComm iRMT(.clk(clk), .rst_n(RST_n), .RX(RX_TX), .TX(TX_RX), .cmd(cmd),
-					.send_cmd(send_cmd), .cmd_sent(cmd_sent), .resp_rdy(resp_rdy), .resp(resp), .clr_rx_rdy(1'b0));
+					.send_cmd(send_cmd), .cmd_sent(cmd_sent), .resp_rdy(resp_rdy), .resp(resp), .clr_rx_rdy(clr_rx_rdy));
 				   
 	//////////////////////////////////////////////////////
 	// Instantiate model of Knight Physics (and board) //
@@ -61,7 +61,7 @@ module KnightsTour_tb();
 		Wait4Sig (.clk(clk), .sig(resp_rdy), .clks2wait(1000000));
 		
 		// compare response obtained from KnightsTour against expected value
-		VerifyResponse (.resp(resp), .data(COMM_COMPLETE));
+		VerifyResponse (.resp(resp), .clk(clk), .clear_resp(clr_rx_rdy), .data(COMM_COMPLETE));
 		
 		/////////////////////////// send move west command ///////////////////////////
 		
