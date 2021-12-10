@@ -70,25 +70,52 @@ module PID(clk, rst_n, moving, err_vld, error, frwrd, lft_spd, rght_spd);
 			err2 <= 0;
 		end
 
-		else if (err_vld)
+		else if (err_vld && moving)
 		begin
 			err1 <= error_sat;	// 2 error values needed one time step apart
 			err2 <= err1;		// for taking the difference
 		end
-
-	assign D_diff = error_sat - err2; // get the difference between current and prev error
+		
+	logic signed [9:0] error_sat_piped;
+	always_ff @(posedge clk, negedge rst_n)
+	if(!rst_n)
+		error_sat_piped	 <= 0;
+	else
+		error_sat_piped <= error_sat;
+	
+	assign D_diff = error_sat_piped - err2; // get the difference between current and prev error
 	
 	// saturation logic based on whether D_diff has a high positive or negative value
 	assign D_diff_sat = (D_diff[9] && ~&D_diff[8:6]) ? 7'b1000000 : (~D_diff[9] && |D_diff[8:6]) ? 7'b0111111 : D_diff[6:0];
-	
+	reg [6:0]D_COEFF_piped;
+
 	// scale D_diff_sat with D_COEFF to get final output of derivative controller
 	assign D_term1 = D_diff_sat * $signed(D_COEFF);
 	assign D_term = {D_term1[12], D_term1};
 	
 	
 	///////////////////////// Combined ///////////////////////////////
+	logic signed [13:0] P_term_piped,I_term_piped,D_term_piped ;
+	logic [10:0] frwrd_ex_piped;
+	always_ff @(posedge clk, negedge rst_n)
+	if(!rst_n)
+		P_term_piped <= 0;
+	else
+		P_term_piped <= P_term;
+				
+	always_ff @(posedge clk, negedge rst_n)
+	if(!rst_n)
+		I_term_piped <= 0;
+	else
+		I_term_piped <= I_term;
+		
+	always_ff @(posedge clk, negedge rst_n)
+	if(!rst_n)
+		D_term_piped <= 0;
+	else
+		D_term_piped <= D_term;
 	
-	assign PID = P_term + I_term + D_term;
+	assign PID = P_term_piped + I_term_piped + D_term_piped;
 	
 	// get wheel speeds
 	assign frwrd_ex = {1'b0, frwrd};
@@ -100,11 +127,12 @@ module PID(clk, rst_n, moving, err_vld, error, frwrd, lft_spd, rght_spd);
 	
 	// speed saturation
 	// frwrd can only be positive so check for sign of PID
-	
+	logic PID_msb_piped;
+
+		
 	// if PID is positive but lft_spd_pre is negative, saturate lft_spd
 	assign lft_spd = PID[13] ? lft_spd_pre : lft_spd_pre[10] ? 11'h3FF : lft_spd_pre;
 	// if PID is negative but rght_spd_pre is negative, saturate rght_spd
 	assign rght_spd = !PID[13] ? rght_spd_pre : rght_spd_pre[10] ? 11'h3FF : rght_spd_pre;
 	
 endmodule
-

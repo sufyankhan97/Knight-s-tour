@@ -22,11 +22,12 @@ module cmd_proc(clk,rst_n,cmd,cmd_rdy,clr_cmd_rdy,send_resp,strt_cal,
 	output logic tour_go;				// pulse to initiate TourCmd block
 	output logic fanfare_go;			// kick off the "Charge!" fanfare on piezo
 
-	logic move_cmd;
-	logic move_cmd_ff;
+	logic moving_sm;					// moving output from state machine
+	logic move_frwd_init;
+	logic move_frwd_init_ff;
 	wire move_done;
-	reg [3:0] move_counter;
-	reg [3:0] move_count_cmd;
+	reg [4:0] move_counter;
+	reg [4:0] move_count_cmd;
 	wire posedge_cntrIR;
 	reg posedge_cntrIR_temp;
 	
@@ -73,7 +74,8 @@ module cmd_proc(clk,rst_n,cmd,cmd_rdy,clr_cmd_rdy,send_resp,strt_cal,
 	assign frwrd_zero = !(|frwrd);			// dec_frwrd used to set enable when frwd is not 0
 	assign max_spd = &frwrd[9:8]; 	
 
-	assign moving = frwrd_zero ? 1'b0 : 1'b1;	// set moving to 1 when bot is in motion
+	always @(posedge clk)
+		moving <= moving_sm;				//flop move_frwd_init since it is a fsm output and can glitch	// set moving to 1 to enable bot movement
 	
 	assign en = heading_rdy ? !((frwrd_zero && dec_frwrd) || (max_spd && inc_frwrd)) : 1'b0;
 	
@@ -85,10 +87,10 @@ module cmd_proc(clk,rst_n,cmd,cmd_rdy,clr_cmd_rdy,send_resp,strt_cal,
 
 	////////////////////counter for sqaures/////////////////////////////
 	always @(posedge clk)
-		move_cmd_ff = move_cmd;				//flop move_cmd since it is a fsm output and can glitch
+		move_frwd_init_ff <= move_frwd_init;				//flop move_frwd_init since it is a fsm output and can glitch
 
 	always @(posedge clk) begin
-		if(move_cmd_ff)
+		if(move_frwd_init_ff)
 			move_counter <= 1'b0;			
 		else if(posedge_cntrIR)
 			move_counter <= move_counter + 1'b1;	// increment counter at posedge of IR
@@ -96,8 +98,8 @@ module cmd_proc(clk,rst_n,cmd,cmd_rdy,clr_cmd_rdy,send_resp,strt_cal,
 
 	//flop for cmd
 	always @(posedge clk) 	begin
-		if(move_cmd_ff)
-			move_count_cmd <= {cmd[2:0], 1'b0} ;	//multiply by 2 since we cross center line 2 times for every square
+		if(move_frwd_init_ff)
+			move_count_cmd <= {cmd[3:0], 1'b0} ;	//multiply by 2 since we cross center line 2 times for every square
 	end
 	//////////////////////////////////////////
 
@@ -106,12 +108,14 @@ module cmd_proc(clk,rst_n,cmd,cmd_rdy,clr_cmd_rdy,send_resp,strt_cal,
 	/////////////////////////////////////PID Interface/////////////////////////////////////////
 
 	//desired heading
-	reg [11:0] desired_heading;
+	logic [11:0] desired_heading;
 
-	always @(posedge clk)
-		if(move_cmd_ff)
+	/* always @(posedge clk)
+		if(move_frwd_init_ff)
 			desired_heading <= !(|cmd[11:4]) ? 12'h0	:	{cmd[11:4] , 4'hF};	// set heading from cmd 
-
+			 */
+	assign desired_heading = move_frwd_init_ff ? !(|cmd[11:4]) ? 12'h0	: {cmd[11:4] , 4'hF} : desired_heading;	// set heading from cmd 
+	
 	//leftIR and rghtI
 	logic [11:0]err_nudge; 		// nudge factor to align bot when it hits the end rails
 
@@ -149,12 +153,13 @@ module cmd_proc(clk,rst_n,cmd,cmd_rdy,clr_cmd_rdy,send_resp,strt_cal,
 		strt_cal = 0;			// start calibration of gyro signal
 		clr_cmd_rdy = 0;		// clear cmd rdy signal
 		send_resp = 0;			// send response to UART. Not needed for TOUR
-		move_cmd = 0;			// signal to start bot orienting itself. Reset square count, and desired_heading
+		move_frwd_init = 0;		// signal to move bot forward. Reset square count, and desired_heading
 		inc_frwrd = 0;			// begins ramping up speed of bot to max speed
 		dec_frwrd = 0;			// begins decelerating bot.
-		clr_frwd = 1'b1;			// sets bot speed to 0
+		clr_frwd = 1'b1;		// sets bot speed to 0
 		tour_go_comb = 0;		// sets tour_go
 		fanfare_go = 0;			// sets fanfare_go
+		moving_sm = 0;			// enables bot movement. Orientation changing also counts as movement
 		nxt_state = state;
 		
 		case (state)
@@ -162,10 +167,12 @@ module cmd_proc(clk,rst_n,cmd,cmd_rdy,clr_cmd_rdy,send_resp,strt_cal,
 				if (cmd_rdy) begin
 					if (opcode == 4'h0)
 						nxt_state = CAL;
-					else if (opcode == 4'h2)
-						nxt_state = STR_MOVE;
-					else if (opcode == 4'h3)
-						nxt_state = STR_MOVE;
+					else if (opcode == 4'h2)	begin
+						move_frwd_init = 1'b1;									// sets value for desired_heading, move_count_cmd, resets move_counter
+						nxt_state = STR_MOVE;	end
+					else if (opcode == 4'h3)	begin
+						move_frwd_init = 1'b1;									// sets value for desired_heading, move_count_cmd, resets move_counter
+						nxt_state = STR_MOVE;	end
 					else if (opcode == 4'h4)
 						nxt_state = TOUR;
 					end
@@ -177,18 +184,18 @@ module cmd_proc(clk,rst_n,cmd,cmd_rdy,clr_cmd_rdy,send_resp,strt_cal,
 				if (cal_done)	begin	// after cal is over, got back to IDLE
 					send_resp = 1'b1;
 					nxt_state = IDLE;	
-					
 					end
 				end
 		
 		STR_MOVE:	begin 
+					moving_sm = 1'b1;										// bot begins orienting itself
 					clr_cmd_rdy = 1'b1;
 					if ((error < $signed(12'h030)) && (error > $signed(12'hFD0))) 	// make sure heading is more or less correct
-						nxt_state = MOVE;								// start moving forward
-						move_cmd = 1'b1;								// bot begins orienting itself
+						nxt_state = MOVE;									// start moving forward
 					end
 					
 		MOVE:	begin
+				moving_sm = 1'b1;
 				clr_frwd = 1'b0;
 				inc_frwrd = 1'b1;
 				if (move_done) begin			
@@ -197,6 +204,7 @@ module cmd_proc(clk,rst_n,cmd,cmd_rdy,clr_cmd_rdy,send_resp,strt_cal,
 				end
 				
 		STP_MOVE: 	begin
+					moving_sm = 1'b1;
 					clr_frwd = 1'b0;
 					dec_frwrd = 1'b1;
 					if (!(|frwrd)) begin	// check if bot is stationary
