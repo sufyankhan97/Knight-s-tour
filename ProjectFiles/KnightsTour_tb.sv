@@ -1,4 +1,4 @@
-`timescale 1 ns / 1 ns
+`timescale 1ns/1ps
 module KnightsTour_tb();
 
 	import tb_package::*;
