@@ -1,0 +1,200 @@
+Coverage Report Summary Data by file
+
+=================================================================================
+=== File: /filespace/l/lraja/ece551/project_synthesis/IR_intf.sv
+=================================================================================
+    Enabled Coverage              Bins      Hits    Misses  Coverage
+    ----------------              ----      ----    ------  --------
+    Branches                        28        28         0   100.00%
+    Conditions                       2         2         0   100.00%
+    Expressions                      6         6         0   100.00%
+    Statements                      41        41         0   100.00%
+    Toggles                        122       104        18    85.24%
+
+=================================================================================
+=== File: /filespace/l/lraja/ece551/project_synthesis/KnightPhysics.sv
+=================================================================================
+    Enabled Coverage              Bins      Hits    Misses  Coverage
+    ----------------              ----      ----    ------  --------
+    Branches                       108        62        46    57.40%
+    Conditions                      68        23        45    33.82%
+    Statements                      88        68        20    77.27%
+    Toggles                        516       506        10    98.06%
+
+=================================================================================
+=== File: /filespace/l/lraja/ece551/project_synthesis/KnightsTour.sv
+=================================================================================
+    Enabled Coverage              Bins      Hits    Misses  Coverage
+    ----------------              ----      ----    ------  --------
+    Toggles                        288       219        69    76.04%
+
+=================================================================================
+=== File: /filespace/l/lraja/ece551/project_synthesis/MtrDrv.sv
+=================================================================================
+    Enabled Coverage              Bins      Hits    Misses  Coverage
+    ----------------              ----      ----    ------  --------
+    Statements                       2         2         0   100.00%
+    Toggles                         44        44         0   100.00%
+
+=================================================================================
+=== File: /filespace/l/lraja/ece551/project_synthesis/PID.sv
+=================================================================================
+    Enabled Coverage              Bins      Hits    Misses  Coverage
+    ----------------              ----      ----    ------  --------
+    Branches                        37        36         1    97.29%
+    Conditions                      12        12         0   100.00%
+    Statements                      39        39         0   100.00%
+    Toggles                        598       574        24    95.98%
+
+=================================================================================
+=== File: /filespace/l/lraja/ece551/project_synthesis/PWM11.sv
+=================================================================================
+    Enabled Coverage              Bins      Hits    Misses  Coverage
+    ----------------              ----      ----    ------  --------
+    Branches                         6         6         0   100.00%
+    Conditions                       1         1         0   100.00%
+    Statements                       7         7         0   100.00%
+    Toggles                         28        28         0   100.00%
+
+=================================================================================
+=== File: /filespace/l/lraja/ece551/project_synthesis/RemoteComm.sv
+=================================================================================
+    Enabled Coverage              Bins      Hits    Misses  Coverage
+    ----------------              ----      ----    ------  --------
+    Branches                        20        20         0   100.00%
+    Statements                      23        23         0   100.00%
+    Toggles                        110        56        54    50.90%
+
+=================================================================================
+=== File: /filespace/l/lraja/ece551/project_synthesis/SPI_iNEMO4.sv
+=================================================================================
+    Enabled Coverage              Bins      Hits    Misses  Coverage
+    ----------------              ----      ----    ------  --------
+    Branches                        53        39        14    73.58%
+    Conditions                       2         2         0   100.00%
+    Expressions                      3         1         2    33.33%
+    Statements                      84        60        24    71.42%
+    Toggles                        136       116        20    85.29%
+
+=================================================================================
+=== File: /filespace/l/lraja/ece551/project_synthesis/SPI_mnrch.sv
+=================================================================================
+    Enabled Coverage              Bins      Hits    Misses  Coverage
+    ----------------              ----      ----    ------  --------
+    Branches                        36        36         0   100.00%
+    Expressions                      2         2         0   100.00%
+    Statements                      42        42         0   100.00%
+    Toggles                        112       112         0   100.00%
+
+=================================================================================
+=== File: /filespace/l/lraja/ece551/project_synthesis/TourCmd.sv
+=================================================================================
+    Enabled Coverage              Bins      Hits    Misses  Coverage
+    ----------------              ----      ----    ------  --------
+    Branches                        43        35         8    81.39%
+    Conditions                       4         1         3    25.00%
+    Expressions                      3         3         0   100.00%
+    Statements                      70        45        25    64.28%
+    Toggles                        112        54        58    48.21%
+
+=================================================================================
+=== File: /filespace/l/lraja/ece551/project_synthesis/TourLogic.sv
+=================================================================================
+    Enabled Coverage              Bins      Hits    Misses  Coverage
+    ----------------              ----      ----    ------  --------
+    Branches                        73        71         2    97.26%
+    Conditions                      37        33         4    89.18%
+    Statements                     111       111         0   100.00%
+    Toggles                        154       153         1    99.35%
+
+=================================================================================
+=== File: /filespace/l/lraja/ece551/project_synthesis/UART.v
+=================================================================================
+    Enabled Coverage              Bins      Hits    Misses  Coverage
+    ----------------              ----      ----    ------  --------
+    Toggles                         48        42         6    87.50%
+
+=================================================================================
+=== File: /filespace/l/lraja/ece551/project_synthesis/UART_rx.sv
+=================================================================================
+    Enabled Coverage              Bins      Hits    Misses  Coverage
+    ----------------              ----      ----    ------  --------
+    Branches                        27        27         0   100.00%
+    Conditions                       4         4         0   100.00%
+    Statements                      35        35         0   100.00%
+    Toggles                        116       107         9    92.24%
+
+=================================================================================
+=== File: /filespace/l/lraja/ece551/project_synthesis/UART_tx.sv
+=================================================================================
+    Enabled Coverage              Bins      Hits    Misses  Coverage
+    ----------------              ----      ----    ------  --------
+    Branches                        25        25         0   100.00%
+    Conditions                       4         4         0   100.00%
+    Statements                      29        29         0   100.00%
+    Toggles                         88        82         6    93.18%
+
+=================================================================================
+=== File: /filespace/l/lraja/ece551/project_synthesis/UART_wrapper.sv
+=================================================================================
+    Enabled Coverage              Bins      Hits    Misses  Coverage
+    ----------------              ----      ----    ------  --------
+    Branches                        12        12         0   100.00%
+    Statements                      17        17         0   100.00%
+    Toggles                         44        29        15    65.90%
+
+=================================================================================
+=== File: /filespace/l/lraja/ece551/project_synthesis/charge.sv
+=================================================================================
+    Enabled Coverage              Bins      Hits    Misses  Coverage
+    ----------------              ----      ----    ------  --------
+    Branches                        42        41         1    97.61%
+    Conditions                       4         4         0   100.00%
+    Expressions                      1         1         0   100.00%
+    Statements                      54        53         1    98.14%
+    Toggles                        142       115        27    80.98%
+
+=================================================================================
+=== File: /filespace/l/lraja/ece551/project_synthesis/cmd_proc.sv
+=================================================================================
+    Enabled Coverage              Bins      Hits    Misses  Coverage
+    ----------------              ----      ----    ------  --------
+    Branches                        49        47         2    95.91%
+    Conditions                       6         5         1    83.33%
+    Expressions                     10         7         3    70.00%
+    Statements                      72        72         0   100.00%
+    Toggles                        192       141        51    73.43%
+
+=================================================================================
+=== File: /filespace/l/lraja/ece551/project_synthesis/inert_intf.sv
+=================================================================================
+    Enabled Coverage              Bins      Hits    Misses  Coverage
+    ----------------              ----      ----    ------  --------
+    Branches                        32        31         1    96.87%
+    Conditions                       2         1         1    50.00%
+    Statements                      46        46         0   100.00%
+    Toggles                        192       174        18    90.62%
+
+=================================================================================
+=== File: /filespace/l/lraja/ece551/project_synthesis/inertial_integrator.sv
+=================================================================================
+    Enabled Coverage              Bins      Hits    Misses  Coverage
+    ----------------              ----      ----    ------  --------
+    Branches                        34        33         1    97.05%
+    Conditions                       9         4         5    44.44%
+    Expressions                      1         1         0   100.00%
+    Statements                      50        50         0   100.00%
+    Toggles                        328       223       105    67.98%
+
+=================================================================================
+=== File: /filespace/l/lraja/ece551/project_synthesis/reset_synch.v
+=================================================================================
+    Enabled Coverage              Bins      Hits    Misses  Coverage
+    ----------------              ----      ----    ------  --------
+    Branches                         2         2         0   100.00%
+    Statements                       5         5         0   100.00%
+    Toggles                          8         5         3    62.50%
+
+
+Total Coverage By File (code coverage only, filtered view): 81.47%
+
