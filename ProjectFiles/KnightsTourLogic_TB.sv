@@ -1,3 +1,4 @@
+`timescale 1ns/1ps
 module KnightsTour_tb3();
 
 	import tb_package::*;

@@ -3,7 +3,7 @@
 // Version   : S-2021.06
 // Date      : Sat Dec 11 21:20:07 2021
 /////////////////////////////////////////////////////////////
-
+`timescale 1ns/1ps
 
 module KnightsTour ( clk, RST_n, SS_n, SCLK, MOSI, MISO, INT, lftPWM1, lftPWM2, 
         rghtPWM1, rghtPWM2, RX, TX, piezo, piezo_n, IR_en, lftIR_n, cntrIR_n, 
