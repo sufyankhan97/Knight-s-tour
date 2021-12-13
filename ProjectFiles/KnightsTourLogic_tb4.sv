@@ -1,4 +1,4 @@
-module KnightsTour_tb3();
+module KnightsTour_tb4();
 
 	import tb_package::*;
     
@@ -22,7 +22,8 @@ module KnightsTour_tb3();
 	wire lftIR_n,rghtIR_n,cntrIR_n;
 	
 	logic [15:0] data2send;
-	logic tour_go;
+	
+	logic [2:0] next_x, next_y;
 
 	//////////////////////
 	// Instantiate DUT //
@@ -58,26 +59,41 @@ module KnightsTour_tb3();
 		SendCmdBLE (.clk(clk), .cmd(cmd), .send_cmd(send_cmd), .cmd_sent(cmd_sent), .data(CALIBRATE));
 		// wait for cal_done
 		Wait4Sig (.clk(clk), .sig(iDUT.cal_done), .clks2wait(1000000));
+		
 		// compare response obtained from KnightsTour against expected value
 		Wait4Sig (.clk(clk), .sig(resp_rdy), .clks2wait(1000000));
 		VerifyResponse (.clk(clk), .resp(resp), .clear_resp(clr_rx_rdy), .data(COMM_COMPLETE));
 		
 		/////////////////////////// send start Knight's tour command ///////////////////////////
 		
-		KnightsTourCmdGen (.start_x(START_X), .start_y(START_Y), .cmd(data2send));
+		// generate command based on current position on Knight
+		KnightsTourCmdGen (.start_x(iPHYS.xx[14:12]), .start_y(iPHYS.yy[14:12]), .cmd(data2send));
 		// send command to initiate Knight's tour 
 		SendCmdBLE (.clk(clk), .cmd(cmd), .send_cmd(send_cmd), .cmd_sent(cmd_sent), .data(data2send));
+		
 		// check if Tour is fully solved
 		Wait4Sig (.clk(clk), .sig(iDUT.start_tour), .clks2wait(1000000));
-		// wait for 2 moves to be completed
+		
+		// first L-move check
+		
+		// get next expected position
+		GetNextPos (.curr_x(iPHYS.xx[14:12]), .curr_y(iPHYS.yy[14:12]), .move(iDUT.move), .next_x(next_x), .next_y(next_y));	
+		// wait for both vertical and horizontal move to complete
 		Wait4Sig (.clk(clk), .sig(resp_rdy), .clks2wait(10000000));
 		VerifyResponse (.clk(clk), .resp(resp), .clear_resp(clr_rx_rdy), .data(COMM_INTERMEDIATE));
 		Wait4Sig (.clk(clk), .sig(resp_rdy), .clks2wait(10000000));
 		VerifyResponse (.clk(clk), .resp(resp), .clear_resp(clr_rx_rdy), .data(COMM_INTERMEDIATE));
+		ComparePos (.actual_x(iPHYS.xx[14:12]), .actual_y(iPHYS.yy[14:12]), .exp_x(next_x), .exp_y(next_y));	// compare actual position against expected
+		
+		// second move check
+		
+		// get next expected position
+		GetNextPos (.curr_x(iPHYS.xx[14:12]), .curr_y(iPHYS.yy[14:12]), .move(iDUT.move), .next_x(next_x), .next_y(next_y));
 		Wait4Sig (.clk(clk), .sig(resp_rdy), .clks2wait(10000000));
 		VerifyResponse (.clk(clk), .resp(resp), .clear_resp(clr_rx_rdy), .data(COMM_INTERMEDIATE));
-		//Wait4Sig (.clk(clk), .sig(resp_rdy), .clks2wait(10000000));
-		//VerifyResponse (.clk(clk), .resp(resp), .clear_resp(clr_rx_rdy), .data(COMM_INTERMEDIATE));
+		Wait4Sig (.clk(clk), .sig(resp_rdy), .clks2wait(10000000));
+		VerifyResponse (.clk(clk), .resp(resp), .clear_resp(clr_rx_rdy), .data(COMM_INTERMEDIATE));
+		ComparePos (.actual_x(iPHYS.xx[14:12]), .actual_y(iPHYS.yy[14:12]), .exp_x(next_x), .exp_y(next_y));	// compare actual position against exp
 		
 		$display("All good ___|-|___/ ");
 		$stop();
@@ -85,7 +101,6 @@ module KnightsTour_tb3();
 
 	always begin
 		#5 clk = ~clk;
-		tour_go = iDUT.tour_go;
 		end
 		
 endmodule

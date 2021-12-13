@@ -1,4 +1,4 @@
-`timescale 1 ns / 1 ns
+// `timescale 1 ns / 1 ns
 module KnightsTour_tb2();
 
 	import tb_package::*;
@@ -70,6 +70,8 @@ module KnightsTour_tb2();
 		// compare response obtained from KnightsTour against expected value
 		Wait4Sig (.clk(clk), .sig(resp_rdy), .clks2wait(10000000));
 		VerifyResponse (.clk(clk), .resp(resp), .clear_resp(clr_rx_rdy), .data(COMM_COMPLETE));
+		
+		$display("All good ___|-|___/ ");
 		$stop();
 	end
 

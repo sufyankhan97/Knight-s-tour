@@ -1,4 +1,4 @@
-`timescale 1 ns / 1 ns
+// `timescale 1 ns / 1 ns
 module KnightsTour_tb();
 
 	import tb_package::*;
@@ -64,8 +64,7 @@ module KnightsTour_tb();
 		// compare response obtained from KnightsTour against expected value
 		VerifyResponse (.resp(resp), .clk(clk), .clear_resp(clr_rx_rdy), .data(COMM_COMPLETE));
 		
-		/////////////////////////// send move west command ///////////////////////////
-		
+		$display("All good ___|-|___/ ");
 		$stop();
 	end
 

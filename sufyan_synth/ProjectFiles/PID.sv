@@ -70,7 +70,7 @@ module PID(clk, rst_n, moving, err_vld, error, frwrd, lft_spd, rght_spd);
 			err2 <= 0;
 		end
 
-		else if (err_vld)
+		else if (err_vld && moving)
 		begin
 			err1 <= error_sat;	// 2 error values needed one time step apart
 			err2 <= err1;		// for taking the difference

@@ -127,10 +127,10 @@ case(move) //encoded move to perform
 
 8'h1 : 
 begin
-        vert_num = 4'h2; //move two squares vertically
-	vertical = 8'h00;	 //move north (+Y)
-        horz_num = 4'h1; //move one square horizontally
-	horizontal = 8'h3F;  //move west (-X)
+    vert_num = 4'h2; 		//move two squares vertically
+	vertical = 8'h00;	 	//move north (+Y)
+    horz_num = 4'h1; 		//move one square horizontally
+	horizontal = 8'h3F;  	//move west (-X)
 end
 
 8'h2 : 
