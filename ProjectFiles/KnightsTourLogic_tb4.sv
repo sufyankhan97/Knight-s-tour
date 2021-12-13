@@ -64,7 +64,17 @@ module KnightsTour_tb4();
 		Wait4Sig (.clk(clk), .sig(resp_rdy), .clks2wait(1000000));
 		VerifyResponse (.clk(clk), .resp(resp), .clear_resp(clr_rx_rdy), .data(COMM_COMPLETE));
 		
-		/////////////////////////// send start Knight's tour command ///////////////////////////
+		/////////////////////////// move Knight West by 2 squares ///////////////////////////
+		
+		MoveCmdGen (.fanfare(1'b0), .direction(WEST), .count(4'h2), .cmd(data2send));
+		// send command for gyro calibration
+		SendCmdBLE (.clk(clk), .cmd(cmd), .send_cmd(send_cmd), .cmd_sent(cmd_sent), .data(data2send));
+		// compare response obtained from KnightsTour against expected value
+		Wait4Sig (.clk(clk), .sig(resp_rdy), .clks2wait(10000000));
+		VerifyResponse (.clk(clk), .resp(resp), .clear_resp(clr_rx_rdy), .data(COMM_COMPLETE));
+		ComparePos (.actual_x(iPHYS.xx[14:12]), .actual_y(iPHYS.yy[14:12]), .exp_x(3'h0), .exp_y(3'h2));
+		
+		/////////////////////////// send start Knight's tour command from (0,2) ///////////////////////////
 		
 		// generate command based on current position on Knight
 		KnightsTourCmdGen (.start_x(iPHYS.xx[14:12]), .start_y(iPHYS.yy[14:12]), .cmd(data2send));
