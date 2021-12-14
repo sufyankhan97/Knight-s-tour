@@ -1,31 +1,30 @@
-read_file -format sverilog {cmd_proc.sv inert_intf.sv inertial_integrator.sv IR_intf.sv MtrDrv.sv PID.sv reset_synch.v SPI_mnrch.sv TourCmd.sv TourLogic.sv UART_tx.sv UART_rx.sv UART.v UART_wrapper.sv PWM11.sv KnightsTour.sv charge.sv}
-set current_design KnightsTour
+read_file -format sverilog {cmd_proc.sv inert_intf.sv inertial_integrator.sv IR_intf.sv MtrDrv.sv PID.sv reset_synch.v SPI_mnrch.sv TourCmd.sv TourLogic.sv UART_tx.sv UART_rx.sv UART.v UART_wrapper.sv PWM11.sv KnightsTour.sv charge.sv};
+set current_design KnightsTour;
 
-create_clock -name "clk" -period 3 {clk}
-set_dont_touch_network [find port clk]
+create_clock -name "clk" -period 3 {clk};
+set_dont_touch_network [find port clk];
 
-set prim_inputs [remove_from_collection [all_inputs] [find port clk]]
+set prim_inputs [remove_from_collection [all_inputs] [find port clk]];
+set_input_delay -clock clk 0.4 $prim_inputs;
 
-set_input_delay -clock clk 0.4 $prim_inputs
+set_driving_cell -lib_cell NAND2X2_LVT -library saed32lvt_tt0p85v25c $prim_inputs;
+set_output_delay -clock clk 0.4 [all_outputs];
+set_load 0.10 [all_outputs];
 
-set_driving_cell -lib_cell NAND2X2_LVT -library saed32lvt_tt0p85v25c $prim_inputs
-set_output_delay -clock clk 0.4 [all_outputs]
-set_load 0.10 [all_outputs]
-
-set_wire_load_model -name 16000 -library saed32lvt_tt0p85v25c
-set_max_transition 0.15 [current_design]
-set_clock_uncertainty 0.15 clk
+set_wire_load_model -name 16000 -library saed32lvt_tt0p85v25c;
+set_max_transition 0.15 [current_design];
+set_clock_uncertainty 0.15 clk;
 
 
-compile -map_effort medium
-set_fix_hold clk
-ungroup -all -flatten
-compile -map_effort medium
+compile -map_effort medium;
+set_fix_hold clk;
+ungroup -all -flatten;
+compile -map_effort medium;
 
-report_timing -delay max > max_delay.txt
-report_timing -delay min > min_delay.txt
+report_timing -delay max > max_delay.txt;
+report_timing -delay min > min_delay.txt;
 
-report_area > area.txt	
+report_area > area.txt;
 
-write -format verilog KnightsTour -output KnightsTour.vg
-write -format verilog KnightsTour -output KnightsTour.sdc
+write -format verilog KnightsTour -output KnightsTour.vg;
+write -format verilog KnightsTour -output KnightsTour.sdc;
