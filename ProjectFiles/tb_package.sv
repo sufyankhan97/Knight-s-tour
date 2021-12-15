@@ -100,8 +100,9 @@ package tb_package;
 		if (actual_x!==exp_x && actual_y!==exp_y) begin
 			$display("ERR: Where the hell is the bot at?");
 			$stop(); end
-		else
+		else	begin
 			$display("Onwards, Oh Gallant Knight!");
+			$display("Position x %d, y %d", actual_x, actual_y); end
 	endtask
 	
 	// Check if signal posedge encountered within clks2wait clk cycles
